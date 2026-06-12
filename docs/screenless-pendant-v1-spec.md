@@ -1,9 +1,11 @@
 # Screenless AI Pendant — v1 Hardware Spec
 
-**Form factor:** Neck-worn pendant
+**Form factor:** Neck-worn pendant on a breakaway necklace cord, worn at sternum height
 **Connectivity:** Wi-Fi → local server (Mac mini), phone-free
 **Board:** Seeed XIAO ESP32-S3 Sense
-**Goal of v1:** Capture voice on demand, stream to the Mac mini over Wi-Fi, get a synthesized response back. Nail the wake-up briefing loop before adding anything else.
+**Goal of v1:** Capture voice on demand, stream to the Mac mini over Wi-Fi, get a *fast* synthesized response back. Nail a low-latency wake-up briefing loop before adding anything else.
+
+> **Design intent:** A real necklace you'd wear all day — light, quiet, and quick. The two things v1 is judged on are **comfort** (it disappears around your neck) and **speed** (it answers before you'd reach for a phone). The full physical-design and low-latency architecture lives in [`screenless-pendant-v1-design.md`](./screenless-pendant-v1-design.md).
 
 ---
 

@@ -1,0 +1,40 @@
+name: pendant-ci
+
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - "pendant/**"
+      - ".github/workflows/pendant-ci.yml"
+  pull_request:
+    paths:
+      - "pendant/**"
+      - ".github/workflows/pendant-ci.yml"
+
+jobs:
+  test:
+    name: tests + stress + latency gate
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pendant
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r server/requirements.txt pytest pytest-asyncio
+
+      - name: Unit + integration + stress tests
+        run: python -m pytest -q
+
+      - name: Latency + load benchmark (fast profile)
+        run: python scripts/bench.py --pendants 20 --turns 5 --profile fast
+
+      - name: Latency + load benchmark (realistic profile)
+        run: python scripts/bench.py --pendants 10 --turns 3 --profile realistic

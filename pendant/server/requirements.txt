@@ -1,0 +1,10 @@
+# Core server (mock backends need only these).
+websockets>=12.0
+numpy>=1.24
+
+# Real backends on the Mac mini (install as needed; imported lazily):
+#   faster-whisper>=1.0      # STT
+#   aiohttp>=3.9             # streaming Ollama client (optional; requests fallback)
+#   requests>=2.31           # Ollama fallback transport
+#   piper-tts>=1.2           # TTS
+# Ollama itself runs as a separate local server (https://ollama.com).

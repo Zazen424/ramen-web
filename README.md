@@ -39,16 +39,47 @@ The approach is grounded in well-studied behavioral research:
 
 ## Status
 
-Early stage. This repository is where the product is being built — starting with a minimal version: set a goal, get a daily step, answer yes or no, and watch the streak grow.
+Early stage, but there's a working MVP. It runs as a zero-build static site
+(plain HTML/CSS/JS) with progress saved in your browser via `localStorage` —
+no backend or API keys required yet.
+
+### Run it
+
+Open `index.html` directly in a browser, or serve the folder:
+
+```bash
+npx http-server -p 8137
+# then visit http://127.0.0.1:8137
+```
+
+Set a big dream, get today's small step, answer yes or no, and watch your
+streak grow. "Go further" gives you another step the same day; "Edit or pivot"
+changes the goal.
+
+### Project layout
+
+```
+index.html      # views: onboarding + daily step
+styles.css      # styling
+js/tasks.js     # step generator (stubbed; seam for the Claude API)
+js/store.js     # localStorage persistence
+js/app.js       # UI controller
+```
+
+The step generator in `js/tasks.js` is currently an offline heuristic. It is
+written so it can be swapped for a Claude API call (`claude-opus-4-8`) that
+takes your goal plus history and returns the next step, without changing the
+rest of the app.
 
 ## Roadmap
 
-- [ ] Landing page that explains the idea and captures the first goal
-- [ ] Daily task view with a one-tap yes / no
-- [ ] Streak tracking and history
-- [ ] AI-generated next step from your goal and progress
+- [x] Landing page that explains the idea and captures the first goal
+- [x] Daily task view with a one-tap yes / no
+- [x] Streak tracking and history
+- [x] Saved progress (currently in-browser via `localStorage`)
+- [ ] AI-generated next step from your goal and progress (replace the stub)
 - [ ] Weekly reflection on how far you've come
-- [ ] Accounts and saved progress
+- [ ] Accounts and synced progress across devices
 - [ ] Subscription ($10/mo concept under exploration)
 
 ## License

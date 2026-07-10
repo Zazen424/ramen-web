@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Big Dreams Small Steps: ascending steps toward a star. -->
+  <defs>
+    <linearGradient id="step" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#ff9d2e"/>
+      <stop offset="1" stop-color="#ffb454"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="#0f1115"/>
+  <!-- three ascending steps, kept inside the maskable safe zone (center 80%) -->
+  <g fill="url(#step)">
+    <rect x="96"  y="336" width="96" height="80" rx="12"/>
+    <rect x="208" y="256" width="96" height="160" rx="12"/>
+    <rect x="320" y="176" width="96" height="240" rx="12"/>
+  </g>
+  <!-- the dream: a star above the top step -->
+  <path fill="#e8eaed" d="M368 84l14.7 29.8 32.9 4.8-23.8 23.2 5.6 32.7L368 159l-29.4 15.5 5.6-32.7-23.8-23.2 32.9-4.8z"/>
+</svg>

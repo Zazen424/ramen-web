@@ -56,14 +56,21 @@ Set a big dream, get today's small step, answer yes or no, and watch your
 streak grow. "Go further" gives you another step the same day; "Edit or pivot"
 changes the goal.
 
+The app is mobile-first: installable to your home screen (PWA), works fully
+offline, and every control is sized for thumbs. On a phone, open the site and
+use "Add to Home Screen" to get the standalone app experience.
+
 ### Project layout
 
 ```
-index.html      # views: onboarding + daily step
-styles.css      # styling
-js/tasks.js     # step generator (stubbed; seam for the Claude API)
-js/store.js     # localStorage persistence
-js/app.js       # UI controller
+index.html            # views: onboarding + daily step
+styles.css            # styling (mobile-first, safe-area aware)
+js/tasks.js           # step generator (stubbed; seam for the Claude API)
+js/store.js           # localStorage persistence
+js/app.js             # UI controller + service worker registration
+manifest.webmanifest  # PWA manifest (installable, standalone)
+sw.js                 # service worker: precaches the app shell for offline
+icons/                # app icon (SVG + PNG renditions incl. maskable)
 ```
 
 The step generator in `js/tasks.js` is currently an offline heuristic. It is
@@ -77,6 +84,8 @@ rest of the app.
 - [x] Daily task view with a one-tap yes / no
 - [x] Streak tracking and history
 - [x] Saved progress (currently in-browser via `localStorage`)
+- [x] Mobile-friendly: installable PWA, offline support, thumb-sized touch targets
+- [ ] Export / import progress as a backup (guards against browser storage eviction)
 - [ ] AI-generated next step from your goal and progress (replace the stub)
 - [ ] Weekly reflection on how far you've come
 - [ ] Accounts and synced progress across devices

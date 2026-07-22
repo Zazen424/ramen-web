@@ -14,9 +14,13 @@
   --shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
   --maxw: 560px;
   font-synthesis: none;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
+
+/* Author display rules (e.g. flex) must not defeat the hidden attribute. */
+[hidden] { display: none !important; }
 
 html, body {
   margin: 0;
@@ -31,7 +35,11 @@ html, body {
 .app {
   max-width: var(--maxw);
   margin: 0 auto;
-  padding: 28px 20px 64px;
+  /* Respect notches and the home indicator on phones (standalone PWA too). */
+  padding: calc(28px + env(safe-area-inset-top, 0px))
+           max(20px, env(safe-area-inset-right, 0px))
+           calc(64px + env(safe-area-inset-bottom, 0px))
+           max(20px, env(safe-area-inset-left, 0px));
 }
 
 .view { animation: fade 0.3s ease; }
@@ -84,10 +92,11 @@ html, body {
   color: var(--text);
   border-radius: 10px;
   padding: 12px 14px;
-  font-size: 16px;
+  font-size: 16px; /* >=16px so iOS Safari doesn't zoom on focus */
   font-family: inherit;
   resize: vertical;
   transition: border-color 0.15s ease;
+  touch-action: manipulation;
 }
 .dream-input:focus { outline: none; border-color: var(--accent); }
 
@@ -95,24 +104,32 @@ html, body {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   margin: 14px 0 18px;
 }
 .examples-label { font-size: 13px; color: var(--text-dim); }
 
 .chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   background: var(--surface-2);
   border: 1px solid var(--border);
   color: var(--text-dim);
   border-radius: 999px;
-  padding: 6px 12px;
+  padding: 10px 14px;
   font-size: 13px;
   cursor: pointer;
   transition: all 0.15s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
-.chip:hover { border-color: var(--accent); color: var(--text); }
 
 .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
   border: none;
   border-radius: 10px;
   padding: 12px 18px;
@@ -121,15 +138,15 @@ html, body {
   font-family: inherit;
   cursor: pointer;
   transition: transform 0.08s ease, opacity 0.15s ease, background 0.15s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 .btn:active { transform: scale(0.98); }
 .btn-block { width: 100%; }
 
 .btn-primary { background: var(--accent); color: #1a1205; }
-.btn-primary:hover { background: var(--accent-strong); }
 
 .btn-yes { background: var(--yes); color: #06240f; flex: 1; }
-.btn-yes:hover { background: var(--yes-strong); }
 
 .btn-no {
   background: transparent;
@@ -137,14 +154,22 @@ html, body {
   border: 1px solid var(--border);
   flex: 1;
 }
-.btn-no:hover { border-color: var(--no); color: var(--text); }
 
 .btn-ghost {
   background: var(--surface-2);
   color: var(--text);
   border: 1px solid var(--border);
 }
-.btn-ghost:hover { border-color: var(--accent); }
+
+/* Hover affordances only where hover exists; on touch they stick after a tap. */
+@media (hover: hover) and (pointer: fine) {
+  .chip:hover { border-color: var(--accent); color: var(--text); }
+  .btn-primary:hover { background: var(--accent-strong); }
+  .btn-yes:hover { background: var(--yes-strong); }
+  .btn-no:hover { border-color: var(--no); color: var(--text); }
+  .btn-ghost:hover { border-color: var(--accent); }
+  .link-btn:hover { text-decoration: underline; }
+}
 
 .footnote {
   text-align: center;
@@ -159,11 +184,23 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
   margin-bottom: 20px;
 }
-.topbar-stats { display: flex; gap: 14px; }
+.topbar .brand {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.topbar-stats { display: flex; gap: 14px; flex-shrink: 0; }
 .stat { font-size: 15px; color: var(--text-dim); }
 .stat strong { color: var(--text); font-size: 17px; }
+.stat-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
 
 .goal-card { padding: 16px 22px; }
 .goal-label {
@@ -173,7 +210,7 @@ html, body {
   color: var(--text-dim);
   margin: 0 0 4px;
 }
-.goal-text { font-size: 17px; font-weight: 600; margin: 0 0 6px; }
+.goal-text { font-size: 17px; font-weight: 600; margin: 0 0 6px; overflow-wrap: anywhere; }
 
 .link-btn {
   background: none;
@@ -181,10 +218,16 @@ html, body {
   color: var(--accent);
   font-size: 13px;
   cursor: pointer;
-  padding: 0;
   font-family: inherit;
+  /* Full 44px hit area without changing the visual layout. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 12px 8px;
+  margin: -12px -8px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
-.link-btn:hover { text-decoration: underline; }
 
 .step-card { padding-top: 18px; }
 .step-meta { display: flex; align-items: center; justify-content: space-between; margin: 0 0 14px; }
@@ -206,7 +249,7 @@ html, body {
   color: var(--text-dim);
   margin: 0 0 6px;
 }
-.step-text { font-size: 20px; line-height: 1.35; font-weight: 600; margin: 0 0 22px; }
+.step-text { font-size: 20px; line-height: 1.35; font-weight: 600; margin: 0 0 22px; overflow-wrap: anywhere; }
 
 .step-actions { display: flex; gap: 12px; }
 
@@ -228,7 +271,7 @@ html, body {
 .history-item:first-child { border-top: none; }
 .history-icon { font-size: 18px; line-height: 1.4; }
 .history-body { flex: 1; }
-.history-step { font-size: 15px; margin: 0 0 2px; }
+.history-step { font-size: 15px; margin: 0 0 2px; overflow-wrap: anywhere; }
 .history-when { font-size: 12px; color: var(--text-dim); }
 .history-skipped .history-step { color: var(--text-dim); text-decoration: line-through; }
 
@@ -242,14 +285,28 @@ html, body {
   max-width: 460px;
   width: calc(100% - 40px);
   box-shadow: var(--shadow);
+  /* Keep Save/Cancel reachable when the on-screen keyboard shrinks the viewport. */
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 .dialog::backdrop { background: rgba(0, 0, 0, 0.6); }
 .dialog-form { padding: 24px; }
 .dialog-title { margin: 0 0 6px; font-size: 19px; }
 .dialog-sub { margin: 0 0 16px; color: var(--text-dim); font-size: 14px; }
 .dialog-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+.dialog-actions .btn-primary { min-width: 88px; }
+
+/* Lock background scroll while the dialog is open. */
+body:has(dialog[open]) { overflow: hidden; }
 
 @media (max-width: 480px) {
   .hero-title { font-size: 25px; }
-  .app { padding-top: 20px; }
+  .app { padding-top: max(20px, env(safe-area-inset-top, 0px)); }
+  .topbar .brand { font-size: 11px; letter-spacing: 0.05em; }
+}
+
+/* Stack the primary pair on narrow phones: even heights, easier one-thumb reach. */
+@media (max-width: 360px) {
+  .step-actions { flex-direction: column; }
 }

@@ -218,6 +218,8 @@
     els.editInput.value = state.goal;
     if (typeof els.editDialog.showModal === 'function') {
       els.editDialog.showModal();
+      // Scroll-lock fallback for browsers without :has() (restored on 'close').
+      document.body.style.overflow = 'hidden';
     } else {
       // Fallback for browsers without <dialog>.
       var next = prompt('Edit or pivot your dream:', state.goal);
@@ -240,6 +242,31 @@
       renderDaily(false);
     }
   });
+
+  // Mobile has no Esc key: tapping the backdrop (the dialog's own hit area
+  // outside the form) is the dismissal gesture users reach for first.
+  els.editDialog.addEventListener('click', function (e) {
+    if (e.target === els.editDialog) els.editDialog.close();
+  });
+
+  // Scroll-lock fallback for browsers without :has() support.
+  els.editDialog.addEventListener('close', function () {
+    document.body.style.overflow = '';
+  });
+
+  // --- mobile/PWA ------------------------------------------------------------
+  // Ask the browser to protect localStorage from eviction (iOS ITP clears
+  // script-writable storage after 7 days of no visits -- fatal for a streak).
+  if (navigator.storage && navigator.storage.persist) {
+    navigator.storage.persist().catch(function () { /* best effort */ });
+  }
+
+  // Offline support: the app shell is precached by the service worker.
+  if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').catch(function () { /* best effort */ });
+    });
+  }
 
   // --- go --------------------------------------------------------------------
   route();

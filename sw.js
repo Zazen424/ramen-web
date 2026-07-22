@@ -22,7 +22,12 @@ var ASSETS = [
 self.addEventListener('install', function (e) {
   e.waitUntil(
     caches.open(CACHE).then(function (cache) {
-      return cache.addAll(ASSETS);
+      // cache: 'reload' bypasses the HTTP cache so a CACHE bump always ships
+      // fresh assets (plain addAll could refill the new cache from stale
+      // HTTP-cached copies and pin the old app version).
+      return cache.addAll(ASSETS.map(function (url) {
+        return new Request(url, { cache: 'reload' });
+      }));
     }).then(function () {
       return self.skipWaiting();
     })

@@ -199,6 +199,7 @@
   els.btnYes.addEventListener('click', function () {
     completeCurrent();
     renderDaily(true);
+    requestPersistence();
   });
 
   els.btnNo.addEventListener('click', function () {
@@ -245,8 +246,15 @@
 
   // Mobile has no Esc key: tapping the backdrop (the dialog's own hit area
   // outside the form) is the dismissal gesture users reach for first.
+  // Require the press to START on the backdrop too -- a text-selection drag
+  // out of the textarea dispatches click on the dialog and would otherwise
+  // silently discard the edit.
+  var pressStartedOnBackdrop = false;
+  els.editDialog.addEventListener('pointerdown', function (e) {
+    pressStartedOnBackdrop = e.target === els.editDialog;
+  });
   els.editDialog.addEventListener('click', function (e) {
-    if (e.target === els.editDialog) els.editDialog.close();
+    if (pressStartedOnBackdrop && e.target === els.editDialog) els.editDialog.close();
   });
 
   // Scroll-lock fallback for browsers without :has() support.
@@ -255,10 +263,18 @@
   });
 
   // --- mobile/PWA ------------------------------------------------------------
-  // Ask the browser to protect localStorage from eviction (iOS ITP clears
-  // script-writable storage after 7 days of no visits -- fatal for a streak).
-  if (navigator.storage && navigator.storage.persist) {
-    navigator.storage.persist().catch(function () { /* best effort */ });
+  // Ask the browser to protect localStorage from quota eviction. Called from
+  // the first Yes tap (a user gesture) rather than on load: Firefox shows a
+  // permission prompt for persist(), and an unprompted one on every visit is
+  // hostile. Checked via persisted() first so we only ever ask once.
+  function requestPersistence() {
+    if (!navigator.storage || !navigator.storage.persist) return;
+    var check = navigator.storage.persisted
+      ? navigator.storage.persisted()
+      : Promise.resolve(false);
+    check.then(function (already) {
+      if (!already) return navigator.storage.persist();
+    }).catch(function () { /* best effort */ });
   }
 
   // Offline support: the app shell is precached by the service worker.

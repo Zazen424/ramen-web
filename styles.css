@@ -210,7 +210,9 @@ html, body {
   color: var(--text-dim);
   margin: 0 0 4px;
 }
-.goal-text { font-size: 17px; font-weight: 600; margin: 0 0 6px; overflow-wrap: anywhere; }
+/* 12px bottom margin absorbs .link-btn's -12px hit-area expansion below,
+   so the invisible tap target never overlaps the goal text. */
+.goal-text { font-size: 17px; font-weight: 600; margin: 0 0 12px; overflow-wrap: anywhere; }
 
 .link-btn {
   background: none;
@@ -302,7 +304,7 @@ body:has(dialog[open]) { overflow: hidden; }
 
 @media (max-width: 480px) {
   .hero-title { font-size: 25px; }
-  .app { padding-top: max(20px, env(safe-area-inset-top, 0px)); }
+  .app { padding-top: calc(20px + env(safe-area-inset-top, 0px)); }
   .topbar .brand { font-size: 11px; letter-spacing: 0.05em; }
 }
 

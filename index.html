@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Big Dreams Small Steps</title>
+  <meta name="description" content="You tell us the big dream. We give you one small step a day. All you say is yes or no." />
+  <meta name="theme-color" content="#0f1115" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Small Steps" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main id="app" class="app">
+    <!-- Onboarding: capture the big dream -->
+    <section id="view-onboarding" class="view" hidden>
+      <header class="hero">
+        <p class="brand">Big Dreams Small Steps</p>
+        <h1 class="hero-title">You tell us the big dream.<br />We give you one small step a day.</h1>
+        <p class="hero-sub">All you have to say is <strong>yes</strong> or <strong>no</strong>. Big things get built one kept promise at a time.</p>
+      </header>
+
+      <form id="dream-form" class="card dream-form">
+        <label class="field-label" for="dream-input">What's your big dream?</label>
+        <textarea
+          id="dream-input"
+          class="dream-input"
+          rows="3"
+          placeholder="e.g. Own a self-sustaining farm in Ethiopia that creates local jobs"
+          required
+        ></textarea>
+        <div class="examples">
+          <span class="examples-label">Try:</span>
+          <button type="button" class="chip" data-example="Own a self-sustaining farm in Ethiopia that creates local jobs">Own a farm in Ethiopia</button>
+          <button type="button" class="chip" data-example="Start a profitable software company">Start a company</button>
+          <button type="button" class="chip" data-example="Become conversationally fluent in Spanish">Learn Spanish</button>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Start with one small step</button>
+      </form>
+
+      <p class="footnote">
+        Grounded in the science of tiny habits and small wins. We focus your steps on
+        learning, research, and skills &mdash; never &ldquo;buy this asset&rdquo; advice.
+      </p>
+    </section>
+
+    <!-- Daily view: today's step + yes/no -->
+    <section id="view-daily" class="view" hidden>
+      <header class="topbar">
+        <p class="brand">Big Dreams Small Steps</p>
+        <div class="topbar-stats">
+          <span class="stat" aria-label="Current streak">🔥 <strong id="streak-count">0</strong> <span class="stat-label">streak</span></span>
+          <span class="stat" aria-label="Steps completed">✓ <strong id="total-count">0</strong> <span class="stat-label">done</span></span>
+        </div>
+      </header>
+
+      <div class="card goal-card">
+        <p class="goal-label">Your big dream</p>
+        <p id="goal-text" class="goal-text"></p>
+        <button id="edit-goal" class="link-btn" type="button">Edit or pivot</button>
+      </div>
+
+      <div class="card step-card">
+        <p class="step-meta">
+          <span id="step-category" class="badge">Learn</span>
+          <span id="step-date" class="step-date"></span>
+        </p>
+        <p class="step-prompt">Today's step</p>
+        <p id="step-text" class="step-text"></p>
+
+        <div id="step-actions" class="step-actions">
+          <button id="btn-yes" class="btn btn-yes" type="button">Yes, I did it</button>
+          <button id="btn-no" class="btn btn-no" type="button">Not today</button>
+        </div>
+
+        <div id="step-done" class="step-done" hidden>
+          <p class="done-msg">Step kept. ✅ Promise to yourself, kept.</p>
+          <button id="btn-go-further" class="btn btn-ghost" type="button">Go further &mdash; give me another</button>
+        </div>
+      </div>
+
+      <section class="card history-card">
+        <h2 class="history-title">Your progress</h2>
+        <p id="history-empty" class="history-empty">No steps logged yet. Today is day one.</p>
+        <ul id="history-list" class="history-list"></ul>
+      </section>
+    </section>
+  </main>
+
+  <!-- Edit/pivot dialog -->
+  <dialog id="edit-dialog" class="dialog">
+    <form method="dialog" id="edit-form" class="dialog-form">
+      <h2 class="dialog-title">Edit or pivot your dream</h2>
+      <p class="dialog-sub">Goals change. Narrow it, expand it, or point it somewhere new &mdash; your path adapts.</p>
+      <textarea id="edit-input" class="dream-input" rows="3"></textarea>
+      <div class="dialog-actions">
+        <button value="cancel" class="btn btn-ghost" type="submit">Cancel</button>
+        <button id="edit-save" value="save" class="btn btn-primary" type="submit">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="js/tasks.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
